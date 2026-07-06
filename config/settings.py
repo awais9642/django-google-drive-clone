@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from decouple import config
+from decouple import Csv
 import mimetypes
 
 mimetypes.add_type("application/javascript", ".js", True)
@@ -32,7 +33,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    cast=Csv(),
+    default="127.0.0.1,localhost"
+)
 
 
 # Application definition
@@ -60,6 +65,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -88,13 +94,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Channel layer — Redis backend
+# REDIS_URL = config("REDIS_URL")
+REDIS_URL = config("REDIS_URL", default="redis://127.0.0.1:6379/1")
+
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [('127.0.0.1', 6379)],
-            # 'protocol': 2,  forces RESP2 instead of RESP3 
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [REDIS_URL],
         },
     },
 }
@@ -152,6 +159,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media files (user-uploaded files — Phase 2 will use this)
 
@@ -181,8 +189,8 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
 # Celery
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/1'  # DB 1, keeps it separate from Channels on DB 0
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/1'
+CELERY_BROKER_URL = REDIS_URL  
+CELERY_RESULT_BACKEND = REDIS_URL
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
