@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Shared with me | Drive Clone{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/drive.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <h2>Shared with me</h2>
+    <a href="{% url 'drive:home' %}" class="btn btn-sm btn-outline-secondary">My Drive</a>
+</div>
+
+{% if not file_shares and not folder_shares %}
+    <div class="app-card p-4 text-center text-muted">
+        Nothing has been shared with you yet.
+    </div>
+{% else %}
+
+    {% if folder_shares %}
+    <h5 class="mb-3">Folders</h5>
+    <table class="table app-card mb-4">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Shared by</th>
+                <th>Permission</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for share in folder_shares %}
+            <tr>
+                <td>
+                    <a href="{% url 'drive:folder_view' share.folder.id %}">
+                        📁 {{ share.folder.name }}
+                    </a>
+                </td>
+                <td>{{ share.shared_by.username }}</td>
+                <td>
+                    <span class="badge {% if share.permission == 'edit' %}bg-primary{% else %}bg-secondary{% endif %}">
+                        {{ share.get_permission_display }}
+                    </span>
+                </td>
+                <td>{{ share.created_at|date:"M d, Y" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    {% if file_shares %}
+    <h5 class="mb-3">Files</h5>
+    <table class="table app-card">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Shared by</th>
+                <th>Permission</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for share in file_shares %}
+            <tr>
+                <td>
+                    <a href="{{ share.file.upload.url }}" target="_blank">
+                        📄 {{ share.file.name }}
+                    </a>
+                </td>
+                <td>{{ share.shared_by.username }}</td>
+                <td>
+                    <span class="badge {% if share.permission == 'edit' %}bg-primary{% else %}bg-secondary{% endif %}">
+                        {{ share.get_permission_display }}
+                    </span>
+                </td>
+                <td>{{ share.created_at|date:"M d, Y" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+{% endif %}
+{% endblock %}

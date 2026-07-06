@@ -1,0 +1,25 @@
+<div class="modal fade" id="moveModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Move to...</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <select id="moveDestinationSelect" class="form-select">
+                    <option value="">My Drive (root)</option>
+                    {% for folder in all_folders %}
+                        <option value="{{ folder.id }}">{{ folder.name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="hidden" id="moveTargetId">
+                <input type="hidden" id="moveTargetType">
+                <div class="text-danger small mt-2 d-none" id="moveModalError"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-app-primary" id="moveConfirmBtn">Move</button>
+            </div>
+        </div>
+    </div>
+</div>

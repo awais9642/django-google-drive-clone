@@ -1,0 +1,80 @@
+/*
+  Drive overview page styles. Every color/spacing/timing value below
+  references a variable from variables.css — never a hardcoded value.
+  Change the design in one place (variables.css) and this page updates
+  automatically.
+*/
+
+.drive-toolbar {
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.drive-dropzone {
+    min-height: 300px;
+    border-radius: var(--radius-md);
+    transition: background-color var(--transition-base), border var(--transition-base);
+}
+
+.drive-dropzone.drag-over {
+    background-color: var(--dropzone-active-bg);
+    border: 2px dashed var(--dropzone-active-border);
+}
+
+/* ----- Grid view ----- */
+.drive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: var(--space-md);
+}
+
+.drive-item {
+    position: relative;
+    padding: var(--space-md);
+    text-align: center;
+    cursor: pointer;
+}
+
+.drive-item-link {
+    text-decoration: none;
+    color: var(--color-text);
+    display: block;
+}
+
+.drive-item-icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--space-sm);
+}
+
+.drive-item-name {
+    font-size: var(--font-size-sm);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.drive-item-menu {
+    position: absolute;
+    top: var(--space-xs);
+    right: var(--space-xs);
+}
+
+/* ----- List view ----- */
+.drive-list {
+    background-color: var(--color-surface);
+}
+
+.drive-item-row td a {
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+.drive-item-row td a:hover {
+    color: var(--color-primary);
+}
+
+/* ----- Removal animation hook (used by JS when items are deleted) ----- */
+.drive-item.removing,
+.drive-item-row.removing {
+    animation: fadeOut var(--transition-base) forwards;
+}

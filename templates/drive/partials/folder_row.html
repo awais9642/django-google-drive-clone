@@ -1,0 +1,19 @@
+<tr class="drive-item-row" data-id="{{ folder.id }}" data-type="folder">
+    <td>
+        <a href="{% url 'drive:folder_view' folder.id %}">📁 {{ folder.name }}</a>
+    </td>
+    <td>Folder</td>
+    <td>—</td>
+    <td>{{ folder.updated_at|date:"M d, Y" }}</td>
+    <td>
+        <div class="dropdown">
+            <button class="btn btn-sm btn-light" data-bs-toggle="dropdown">⋮</button>
+            <ul class="dropdown-menu">
+                <li><button class="dropdown-item share-btn" data-id="{{ folder.id }}" data-type="folder" data-name="{{ folder.name }}">Share</button></li>
+                <li><button class="dropdown-item rename-btn" data-id="{{ folder.id }}" data-type="folder" data-name="{{ folder.name }}">Rename</button></li>
+                <li><button class="dropdown-item move-btn" data-id="{{ folder.id }}" data-type="folder">Move</button></li>
+                <li><button class="dropdown-item text-danger delete-btn" data-id="{{ folder.id }}" data-type="folder">Delete</button></li>
+            </ul>
+        </div>
+    </td>
+</tr>

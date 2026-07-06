@@ -1,0 +1,15 @@
+<div class="app-card drive-item folder-item fade-in-item" data-id="{{ folder.id }}" data-type="folder">
+    <a href="{% url 'drive:folder_view' folder.id %}" class="drive-item-link">
+        <div class="drive-item-icon folder-icon">📁</div>
+        <div class="drive-item-name">{{ folder.name }}</div>
+    </a>
+    <div class="dropdown drive-item-menu">
+        <button class="btn btn-sm btn-light" data-bs-toggle="dropdown">⋮</button>
+        <ul class="dropdown-menu">
+            <li><button class="dropdown-item share-btn" data-id="{{ folder.id }}" data-type="folder" data-name="{{ folder.name }}">Share</button></li>
+            <li><button class="dropdown-item rename-btn" data-id="{{ folder.id }}" data-type="folder" data-name="{{ folder.name }}">Rename</button></li>
+            <li><button class="dropdown-item move-btn" data-id="{{ folder.id }}" data-type="folder">Move</button></li>
+            <li><button class="dropdown-item text-danger delete-btn" data-id="{{ folder.id }}" data-type="folder">Delete</button></li>
+        </ul>
+    </div>
+</div>

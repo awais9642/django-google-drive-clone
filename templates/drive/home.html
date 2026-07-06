@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if current_folder %}{{ current_folder.name }}{% else %}My Drive{% endif %} | Drive Clone{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/drive.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="drive-toolbar d-flex align-items-center justify-content-between mb-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'drive:home' %}">My Drive</a></li>
+            {% for crumb in breadcrumbs %}
+                <li class="breadcrumb-item {% if forloop.last %}active{% endif %}">
+                    {% if forloop.last %}
+                        {{ crumb.name }}
+                    {% else %}
+                        <a href="{% url 'drive:folder_view' crumb.id %}">{{ crumb.name }}</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ol>
+    </nav>
+
+    <div class="d-flex align-items-center gap-2">
+        <a href="{% url 'drive:trash' %}" class="btn btn-sm btn-outline-secondary">Trash</a>
+        <a href="{% url 'sharing:shared_with_me' %}" class="btn btn-sm btn-outline-secondary">Shared with me</a>
+        <button class="btn btn-sm btn-outline-secondary" id="newFolderBtn" data-bs-toggle="modal" data-bs-target="#folderModal">
+            New Folder
+        </button>
+        <button class="btn btn-sm btn-app-primary" id="uploadBtn">
+            Upload
+        </button>
+        <input type="file" id="fileInput" class="d-none">
+
+        <div class="btn-group ms-2" role="group" aria-label="View toggle">
+            <button class="btn btn-sm btn-outline-secondary view-toggle-btn active" data-view="grid">Grid</button>
+            <button class="btn btn-sm btn-outline-secondary view-toggle-btn" data-view="list">List</button>
+        </div>
+    </div>
+</div>
+
+<div id="dropZone" class="drive-dropzone">
+
+    {% if not folders and not files %}
+        <div class="text-center text-muted py-5" id="emptyState">
+            <p>This folder is empty.</p>
+        </div>
+    {% endif %}
+
+    <!-- GRID VIEW -->
+    <div id="gridView" class="drive-grid">
+        {% for folder in folders %}
+            {% include 'drive/partials/folder_card.html' %}
+        {% endfor %}
+        {% for file in files %}
+            {% include 'drive/partials/file_card.html' %}
+        {% endfor %}
+    </div>
+
+    <!-- LIST VIEW -->
+    <table id="listView" class="table app-card drive-list d-none">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Size</th>
+                <th>Modified</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for folder in folders %}
+                {% include 'drive/partials/folder_row.html' %}
+            {% endfor %}
+            {% for file in files %}
+                {% include 'drive/partials/file_row.html' %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% include "drive/partials/folder_modal.html" %}
+{% include 'drive/partials/rename_modal.html' %}
+{% include 'drive/partials/move_modal.html' %}
+{% include 'drive/partials/share_modal.html' %}
+{% include 'drive/partials/schedule_modal.html' %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>window.CURRENT_FOLDER_ID = {{ current_folder.id|default:"null" }};</script>
+<script src="{% static 'js/schedule.js' %}"></script>
+<script src="{% static 'js/drive.js' %}"></script>
+<script src="{% static 'js/sharing.js' %}"></script> 
+{% endblock %}

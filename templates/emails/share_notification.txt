@@ -1,0 +1,14 @@
+Hi {{ shared_with_name }},
+
+{{ shared_by }} has shared a {{ item_type }} with you on Drive Clone.
+
+Item: {{ item_name }}
+Permission: {% if permission == 'edit' %}Can edit{% else %}View only{% endif %}
+Shared by: {{ shared_by }}
+
+Open it here:
+{{ access_link }}
+
+---
+You received this email because {{ shared_by }} shared a {{ item_type }} with you
+on Drive Clone. If you weren't expecting this, you can ignore this email.

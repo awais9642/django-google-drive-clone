@@ -1,0 +1,17 @@
+<div class="app-card drive-item file-item fade-in-item" data-id="{{ file.id }}" data-type="file">
+    <a href="{{ file.upload.url }}" target="_blank" class="drive-item-link">
+        <div class="drive-item-icon file-icon">📄</div>
+        <div class="drive-item-name">{{ file.name }}</div>
+    </a>
+    <div class="dropdown drive-item-menu">
+        <button class="btn btn-sm btn-light" data-bs-toggle="dropdown">⋮</button>
+        <ul class="dropdown-menu">
+            <li><button class="dropdown-item share-btn" data-id="{{ file.id }}" data-type="file" data-name="{{ folder.name }}">Share</button></li>
+            <li><button class="dropdown-item rename-btn" data-id="{{ file.id }}" data-type="file" data-name="{{ file.name }}">Rename</button></li>
+            <li><button class="dropdown-item move-btn" data-id="{{ file.id }}" data-type="file">Move</button></li>
+            <li><button class="dropdown-item text-danger delete-btn" data-id="{{ file.id }}" data-type="file">Delete</button></li>
+            <!-- <li><hr class="dropdown-divider"></li> -->
+            <li><button class="dropdown-item text-warning schedule-btn" data-id="{{ file.id }}" data-name="{{ file.name }}" data-scheduled="{{ file.scheduled_delete_at|date:'Y-m-d\TH:i'|default:'' }}">Schedule deletion</button></li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+<nav class="navbar navbar-expand-lg app-navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand"
+           href="{% if user.is_authenticated %}{% url 'drive:home' %}{% else %}{% url 'accounts:login' %}{% endif %}">
+            Drive Clone
+        </a>
+
+        <div class="d-flex align-items-center ms-auto gap-3">
+            {% if user.is_authenticated %}
+
+                <span class="text-muted small d-none d-md-inline">
+                    {{ user.storage_used|filesizeformat }} used
+                </span>
+
+                <!-- Notification bell dropdown -->
+                <div class="dropdown notif-bell" id="notifBell">
+                    <button class="btn btn-light btn-sm position-relative"
+                            id="notifBellBtn"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            title="Notifications">
+                        🔔
+                        <span class="notif-badge d-none" id="notifBadge">0</span>
+                    </button>
+
+                    <div class="dropdown-menu dropdown-menu-end notif-dropdown p-0"
+                         id="notifDropdown"
+                         aria-labelledby="notifBellBtn">
+
+                        <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
+                            <strong class="small">Notifications</strong>
+                            <button class="btn btn-link btn-sm p-0 text-muted small" id="markAllReadBtn">
+                                Mark all read
+                            </button>
+                        </div>
+
+                        <div id="notifList" style="max-height: 360px; overflow-y: auto;">
+                            <div class="text-muted small text-center py-3" id="notifEmpty">
+                                No notifications yet.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <span class="text-muted">{{ user.username }}</span>
+                <a href="{% url 'accounts:profile' %}" class="btn btn-sm btn-outline-secondary">Profile</a>
+                <a href="{% url 'accounts:logout' %}" class="btn btn-sm btn-app-primary">Logout</a>
+
+            {% else %}
+                <a href="{% url 'accounts:login' %}" class="btn btn-sm btn-outline-secondary">Login</a>
+                <a href="{% url 'accounts:register' %}" class="btn btn-sm btn-app-primary">Register</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>

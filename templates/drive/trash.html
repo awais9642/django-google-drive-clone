@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Trash | Drive Clone{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/drive.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h2>Trash</h2>
+    <a href="{% url 'drive:home' %}" class="btn btn-sm btn-outline-secondary">Back to My Drive</a>
+</div>
+
+{% if not folders and not files %}
+    <p class="text-muted">Trash is empty.</p>
+{% endif %}
+
+<table class="table app-card">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Deleted</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for folder in folders %}
+        <tr data-id="{{ folder.id }}" data-type="folder">
+            <td>📁 {{ folder.name }}</td>
+            <td>Folder</td>
+            <td>{{ folder.deleted_at|date:"M d, Y H:i" }}</td>
+            <td>
+                <button class="btn btn-sm btn-outline-secondary trash-restore-btn" data-id="{{ folder.id }}" data-type="folder">Restore</button>
+                <button class="btn btn-sm btn-outline-danger trash-permanent-delete-btn" data-id="{{ folder.id }}" data-type="folder">Delete Forever</button>
+            </td>
+        </tr>
+        {% endfor %}
+        {% for file in files %}
+        <tr data-id="{{ file.id }}" data-type="file">
+            <td>📄 {{ file.name }}</td>
+            <td>File</td>
+            <td>{{ file.deleted_at|date:"M d, Y H:i" }}</td>
+            <td>
+                <button class="btn btn-sm btn-outline-secondary trash-restore-btn" data-id="{{ file.id }}" data-type="file">Restore</button>
+                <button class="btn btn-sm btn-outline-danger trash-permanent-delete-btn" data-id="{{ file.id }}" data-type="file">Delete Forever</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/trash.js' %}"></script>
+{% endblock %}

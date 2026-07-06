@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Drive Clone{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Global CSS variables and shared styles (single source of truth) -->
+    <link rel="stylesheet" href="{% static 'css/variables.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    {% include 'partials/navbar.html' %}
+
+    <main class="container-fluid app-main">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+     <!-- Toast/snackbar container — Phase 7 JS appends toasts here -->
+    <div id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Bootstrap JS bundle -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Global JS -->
+    <script src="{% static 'js/base.js' %}"></script>
+
+    <!-- Auth flag for websocket.js — Django prints true/false directly into JS -->
+    <script>
+    window.IS_AUTHENTICATED = {{ user.is_authenticated|yesno:"true,false" }};
+    </script>
+
+    <!-- WebSocket real-time sync -->
+    <script src="{% static 'js/websocket.js' %}"></script>
+
+    {% if user.is_authenticated %}
+    <script src="{% static 'js/notifications.js' %}"></script>
+    {% endif %}
+
+    {% block extra_js %}{% endblock %}
+   
+</body>
+</html>

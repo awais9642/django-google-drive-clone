@@ -1,0 +1,234 @@
+/*
+  GLOBAL BASE STYLES
+  ---------------------------------------------------
+  Page-wide styles shared by every screen. Page-specific
+  CSS files (e.g. drive.css in Phase 3) should still pull
+  colors/spacing/timing from variables.css, never hardcode.
+*/
+
+body {
+    font-family: var(--font-family-base);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+}
+
+/* ----- Navbar ----- */
+.app-navbar {
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-sm) var(--space-lg);
+}
+
+.app-navbar .navbar-brand {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* ----- Main content area ----- */
+.app-main {
+    padding: var(--space-lg);
+     padding-top: var(--space-lg);
+     min-height: calc(100vh - var(--navbar-height));
+}
+
+/* ----- Toast / snackbar container ----- */
+/*
+  Sits at bottom-right, above everything. Phase 7 JS will append
+  individual toast elements inside here.
+*/
+#toastContainer {
+    position: fixed;
+    bottom: var(--space-lg);
+    right: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    pointer-events: none; /* clicks pass through the container to the page */
+     z-index: 99999;
+}
+
+.app-toast.toast-warning { border-left: 4px solid var(--toast-warning-accent); }
+ 
+.app-toast {
+    background-color: var(--toast-bg);
+    color: var(--toast-color);
+    width: var(--toast-width);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--toast-radius);
+    box-shadow: var(--toast-shadow);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    pointer-events: all;
+    animation: slideInToast var(--transition-base);
+}
+
+.app-toast.toast-success { border-left: 4px solid var(--toast-success-accent); }
+.app-toast.toast-error   { border-left: 4px solid var(--toast-error-accent); }
+.app-toast.toast-info    { border-left: 4px solid var(--toast-info-accent); }
+ 
+.app-toast.toast-hiding {
+    animation: slideOutToast var(--transition-base) forwards;
+}
+
+/* ----- Reusable card style (used by folder/file tiles later) ----- */
+.app-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.app-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+/* ----- Buttons inherit brand color via variables, not Bootstrap defaults ----- */
+.btn-app-primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+    transition: background-color var(--transition-fast);
+}
+
+.btn-app-primary:hover {
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    color: #fff;
+}
+
+/* ----- Skeleton loader (used while items load asynchronously) ----- */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--skeleton-bg) 25%,
+        var(--skeleton-shine) 50%,
+        var(--skeleton-bg) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: var(--radius-sm);
+}
+
+@keyframes shimmer {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+}
+
+/* ----- Generic loading spinner ----- */
+.app-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-border);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+}
+ 
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ----- Notification bell badge (navbar, Phase 7) ----- */
+.notif-bell {
+    position: relative;
+    cursor: pointer;
+}
+ 
+.notif-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background-color: var(--color-danger);
+    color: #fff;
+    font-size: 0.65rem;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 99px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+    line-height: 1;
+}
+
+
+/* ----- Utility: visually hide but keep accessible ----- */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* ----- Generic fade-in utility (used for real-time inserted items later) ----- */
+.fade-in-item {
+    animation: fadeIn var(--transition-slow);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ----- Generic fade-out utility (used for real-time removed items later) ----- */
+.fade-out-item {
+    animation: fadeOut var(--transition-base) forwards;
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; transform: translateY(-4px); }
+}
+
+@keyframes slideInToast {
+    from { opacity: 0; transform: translateX(20px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+ 
+@keyframes slideOutToast {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(20px); }
+}
+
+/* ----- Notification dropdown ----- */
+.notif-dropdown {
+    width: 340px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+}
+
+.notif-item {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    font-size: var(--font-size-sm);
+}
+
+.notif-item:hover {
+    background-color: var(--color-bg);
+}
+
+.notif-item.unread {
+    background-color: rgba(45, 108, 223, 0.04);
+    border-left: 3px solid var(--color-primary);
+}
+
+.notif-item.unread:hover {
+    background-color: rgba(45, 108, 223, 0.08);
+}
+
+.notif-item-time {
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+}

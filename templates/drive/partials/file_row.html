@@ -1,0 +1,21 @@
+<tr class="drive-item-row" data-id="{{ file.id }}" data-type="file">
+    <td>
+        <a href="{{ file.upload.url }}" target="_blank">📄 {{ file.name }}</a>
+    </td>
+    <td>File</td>
+    <td>{{ file.size|filesizeformat }}</td>
+    <td>{{ file.updated_at|date:"M d, Y" }}</td>
+    <td>
+        <div class="dropdown">
+            <button class="btn btn-sm btn-light" data-bs-toggle="dropdown">⋮</button>
+            <ul class="dropdown-menu">
+                <li><button class="dropdown-item share-btn" data-id="{{ file.id }}" data-type="file" data-name="{{ folder.name }}">Share</button></li>
+                <li><button class="dropdown-item rename-btn" data-id="{{ file.id }}" data-type="file" data-name="{{ file.name }}">Rename</button></li>
+                <li><button class="dropdown-item move-btn" data-id="{{ file.id }}" data-type="file">Move</button></li>
+                <li><button class="dropdown-item text-danger delete-btn" data-id="{{ file.id }}" data-type="file">Delete</button></li>
+                 <!-- <li><hr class="dropdown-divider"></li> -->
+                <li><button class="dropdown-item text-warning schedule-btn" data-id="{{ file.id }}" data-name="{{ file.name }}" data-scheduled="{{ file.scheduled_delete_at|date:'Y-m-d\TH:i'|default:'' }}">Schedule deletion</button></li>
+            </ul>
+        </div>
+    </td>
+</tr>
