@@ -36,8 +36,8 @@ A full-featured Google Drive clone built with Django, supporting real-time file 
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/your-repo-name.git
-   cd your-repo-name
+   git clone https://github.com/awais9642/django-google-drive-clone.git
+   cd django-google-drive-clone
    ```
 
 2. **Create and activate a virtual environment**
