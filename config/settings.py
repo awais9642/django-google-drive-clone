@@ -93,6 +93,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.asgi.application'
 
 # REDIS_URL = config("REDIS_URL")
 REDIS_URL = config("REDIS_URL", default="redis://127.0.0.1:6379/1")
