@@ -119,3 +119,10 @@ celerybeat-schedule
 *.tmp
 *.temp
 *.bak
+
+# Docker
+.env.docker
+
+# Docker volumes (if created locally)
+postgres_data/
+redis_data/
