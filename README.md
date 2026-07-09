@@ -1,139 +1,245 @@
-# Django Drive Clone
+# Django Google Drive Clone
 
-A full-featured Google Drive clone built with Django, supporting real-time file sync, sharing, and background task processing.
+A full-featured Google Drive clone built with Django, supporting real-time file synchronization, file sharing, notifications, and background task processing.
+
+---
 
 ## Features
 
-- **File & Folder Management** — Create, upload, rename, move, and organize files/folders in a nested hierarchy
-- **Soft Delete & Trash** — Deleted items go to trash and can be restored or permanently removed
-- **Real-Time Sync** — Two-tab synchronization via WebSockets (Django Channels), so changes reflect instantly across open sessions
-- **Sharing & Permissions** — Share files/folders with other users with configurable permission levels
-- **Notifications** — Persistent in-app notifications for shares, updates, and system events
-- **Email Notifications** — HTML email alerts sent asynchronously via Celery + Gmail SMTP
-- **Scheduled Cleanup** — Celery Beat automatically purges trashed items after a set period
-- **Automated Testing** — Test suite built with pytest-django covering core functionality
+- 📁 **File & Folder Management** — Create, upload, rename, move, and organize files/folders in a nested hierarchy.
+- 🗑️ **Soft Delete & Trash** — Deleted items move to Trash and can be restored or permanently removed.
+- ⚡ **Real-Time Synchronization** — Two-tab synchronization using Django Channels (WebSockets).
+- 🔗 **Sharing & Permissions** — Share files/folders with other users with configurable permissions.
+- 🔔 **Notifications** — Persistent in-app notifications.
+- 📧 **Email Notifications** — HTML email alerts sent asynchronously using Celery.
+- ⏰ **Scheduled Cleanup** — Celery Beat automatically deletes expired trashed items.
+- ✅ **Automated Testing** — Tests written with pytest and pytest-django.
 
-## Tech Stack
+---
+
+# Tech Stack
 
 | Component | Technology |
-|---|---|
-| Backend Framework | Django |
+|-----------|------------|
+| Backend | Django 5 |
 | Database | PostgreSQL |
-| Real-Time Layer | Django Channels + Redis (Memurai on Windows) |
-| Task Queue | Celery + Celery Beat |
-| Email | Gmail SMTP |
-| Frontend | Bootstrap, Vanilla JavaScript |
+| Real-Time | Django Channels |
+| Message Broker | Redis |
+| Background Tasks | Celery |
+| Task Scheduler | Celery Beat |
+| Static Files | WhiteNoise |
+| Frontend | Bootstrap + Vanilla JavaScript |
 | Testing | pytest, pytest-django |
+| Containerization | Docker & Docker Compose |
+
+---
+
+# Running with Docker (Recommended)
+
+## Prerequisites
+
+- Docker Desktop
+- Docker Compose
+
+### Clone the repository
+
+```bash
+git clone https://github.com/awais9642/django-google-drive-clone.git
+cd django-google-drive-clone
+```
+
+### Create environment file
+
+Create a file named:
+
+```
+.env.docker
+```
+
+using the provided `.env.example` as a template.
+
+### Build the containers
+
+```bash
+docker compose build
+```
+
+### Start the application
+
+```bash
+docker compose up
+```
+
+The application will be available at:
+
+```
+http://localhost:8000
+```
+
+Docker automatically starts:
+
+- Django (Daphne)
+- PostgreSQL
+- Redis
+- Celery Worker
+- Celery Beat
+
+No manual installation of PostgreSQL or Redis is required.
+
+---
+
+# Running Without Docker
 
 ## Prerequisites
 
 - Python 3.10+
 - PostgreSQL
-- Redis (or [Memurai](https://www.memurai.com/) if on Windows)
-- A Gmail account with an App Password for SMTP
+- Redis (or Memurai on Windows)
 
-## Installation
+### Create a virtual environment
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/awais9642/django-google-drive-clone.git
-   cd django-google-drive-clone
-   ```
-
-2. **Create and activate a virtual environment**
-   ```bash
-   python -m venv venv
-   venv\Scripts\activate      # Windows
-   source venv/bin/activate   # macOS/Linux
-   ```
-
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Set up environment variables**
-
-   Create a `.env` file in the project root:
-   ```
-   SECRET_KEY=your-secret-key
-   DEBUG=True
-   DATABASE_URL=postgres://user:password@localhost:5432/dbname
-   EMAIL_HOST_USER=your-email@gmail.com
-   EMAIL_HOST_PASSWORD=your-gmail-app-password
-   REDIS_URL=redis://localhost:6379
-   ```
-
-5. **Run database migrations**
-   ```bash
-   python manage.py migrate
-   ```
-
-6. **Create a superuser**
-   ```bash
-   python manage.py createsuperuser
-   ```
-
-## Running the Project Locally
-
-This project requires multiple processes running simultaneously — open a separate terminal for each:
-
-**Terminal 1 — Redis/Memurai**
 ```bash
-memurai
+python -m venv venv
 ```
 
-**Terminal 2 — Django (Daphne/ASGI server)**
+Windows
+
 ```bash
-daphne -b 0.0.0.0 -p 8000 your_project.asgi:application
+venv\Scripts\activate
 ```
 
-**Terminal 3 — Celery Worker**
+macOS/Linux
+
 ```bash
-celery -A your_project worker -l info -P solo
+source venv/bin/activate
 ```
 
-**Terminal 4 — Celery Beat**
+### Install dependencies
+
 ```bash
-celery -A your_project beat -l info
+pip install -r requirements.txt
 ```
 
-Then visit `http://localhost:8000` in your browser.
+### Create a `.env` file
 
-## Running Tests
+```env
+SECRET_KEY=your-secret-key
+
+DEBUG=True
+
+DB_NAME=drive_clone_db
+DB_USER=drive_clone_user
+DB_PASSWORD=your_password
+DB_HOST=localhost
+DB_PORT=5432
+
+REDIS_URL=redis://127.0.0.1:6379/1
+
+EMAIL_HOST_USER=your-email@gmail.com
+EMAIL_HOST_PASSWORD=your-gmail-app-password
+DEFAULT_FROM_EMAIL=your-email@gmail.com
+```
+
+### Apply migrations
+
+```bash
+python manage.py migrate
+```
+
+### Create superuser
+
+```bash
+python manage.py createsuperuser
+```
+
+---
+
+# Run Services
+
+Open four terminals.
+
+### Terminal 1
+
+Redis (or Memurai)
+
+### Terminal 2
+
+```bash
+daphne -b 0.0.0.0 -p 8000 config.asgi:application
+```
+
+### Terminal 3
+
+```bash
+celery -A config worker -l info -P solo
+```
+
+### Terminal 4
+
+```bash
+celery -A config beat -l info
+```
+
+Visit:
+
+```
+http://localhost:8000
+```
+
+---
+
+# Running Tests
 
 ```bash
 pytest
 ```
 
-## Project Structure
+---
+
+# Project Structure
 
 ```
 django-google-drive-clone/
-├── DRIVE_CLONE/          # Project settings, ASGI/WSGI config
-├── drive_app/              # Core app: models, views, consumers
-│   ├── models.py
-│   ├── views.py
-│   ├── consumers.py        # WebSocket consumers
-│   ├── tasks.py            # Celery tasks
-│   └── tests/
+│
+├── accounts/
+├── drive/
+├── notifications/
+├── sharing/
+├── config/
+│   ├── settings.py
+│   ├── asgi.py
+│   ├── wsgi.py
+│   └── celery.py
+│
 ├── templates/
 ├── static/
+├── media/
+│
+├── Dockerfile
+├── docker-compose.yml
+├── entrypoint.sh
+├── .dockerignore
 ├── requirements.txt
-├── .env                    # Not committed — see .gitignore
-└── manage.py
+├── .env.example
+├── manage.py
+└── README.md
 ```
 
-## Deployment
+---
 
-This project is configured for deployment on [Render](https://render.com/). Key considerations for production:
+# Environment Variables
 
-- Set `DEBUG=False`
-- Configure `ALLOWED_HOSTS`
-- Use a managed PostgreSQL and Redis instance
-- Serve static files via WhiteNoise or a CDN
-- Set all secrets via environment variables, never hardcoded
+The repository does **not** include your actual environment files.
 
-## License
+Create one of the following:
 
-This project was developed as part of an internal test/assignment task.
+- `.env` → Local development
+- `.env.docker` → Docker environment
+
+Use `.env.example` as a reference.
+
+---
+
+# License
+
+This project was developed as part of an internal technical assessment.
