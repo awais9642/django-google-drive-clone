@@ -41,33 +41,35 @@ A full-featured Google Drive clone built with Django, supporting real-time file 
 - Docker Desktop
 - Docker Compose
 
-### Clone the repository
+## Clone the repository
 
 ```bash
 git clone https://github.com/awais9642/django-google-drive-clone.git
 cd django-google-drive-clone
 ```
 
-### Create environment file
+## Create the Docker environment file
 
-Create a file named:
+Copy the example environment file:
 
+### Windows (PowerShell)
+
+```powershell
+Copy-Item .env.example .env.docker
 ```
-.env.docker
-```
 
-using the provided `.env.example` as a template.
-
-### Build the containers
+### macOS / Linux
 
 ```bash
-docker compose build
+cp .env.example .env.docker
 ```
 
-### Start the application
+Open `.env.docker` and update the values if needed (for example, your email credentials and Django `SECRET_KEY`).
+
+## Build and start the containers
 
 ```bash
-docker compose up
+docker compose up --build
 ```
 
 The application will be available at:
@@ -84,9 +86,21 @@ Docker automatically starts:
 - Celery Worker
 - Celery Beat
 
-No manual installation of PostgreSQL or Redis is required.
+No manual installation of PostgreSQL, Redis, or Celery is required.
 
----
+## Stopping the application
+
+```bash
+docker compose down
+```
+
+## Rebuilding after dependency changes
+
+If you modify `requirements.txt`, `Dockerfile`, or `docker-compose.yml`, rebuild the images:
+
+```bash
+docker compose up --build
+```
 
 # Running Without Docker
 
